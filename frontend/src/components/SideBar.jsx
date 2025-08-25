@@ -59,7 +59,7 @@ const SideBar = () => {
               </div>
             </div>
           </button>
-        ))};
+        ))}
       </div>
     </aside>
   )

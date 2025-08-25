@@ -1,7 +1,7 @@
 import {create} from 'zustand';
 import { axiosInstance } from '../lib/axios.js';
 import toast from 'react-hot-toast';
-import { io } from 'socket.io-client';
+import { io as ClientIO } from 'socket.io-client';
 
 const BASE_URL = "http://localhost:5001";
 
@@ -92,16 +92,29 @@ export const useAuthStore = create((set,get)=>({
   const { authUser } = get();
   if (!authUser || get().socket?.connected) return;
 
-  const socket = io(BASE_URL, { withCredentials: true });
-  set({ socket });
+  const socket = ClientIO(BASE_URL, {
+  withCredentials: true,
+  query: {
+    userId: authUser._id,
+  },
+});
+
 
   socket.connect();
-},
-disconnectSocket: () => {
-  if (get().socket) {
-    get().socket.disconnect();
-    set({ socket: null });
-  }
+  set({ socket:socket });
+
+  socket.on("getOnlineUsers", (users) => {
+  set({ onlineUsers: users });
+});
+
 },
 
+disconnectSocket: () => {
+  const socket = get().socket;
+  if (socket?.connected) {
+    socket.disconnect();
+  }
+  set({ socket: null });
+},
 }));
+

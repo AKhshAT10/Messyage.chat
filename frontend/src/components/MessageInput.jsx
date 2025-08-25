@@ -32,12 +32,12 @@ const MessageInput = () => {
 
   const handleSendMessage = async(e)=>{
       e.preventDefault();
-      if(!text.trim() && !!imagePreview) return;
+      if(!text.trim() && !imagePreview) return;
 
       try{
         await sendMessage({
            text: text.trim(),
-           image: imagePreview(),
+           image: imagePreview,
         });
         setText("");
         setImagePreview(null);
@@ -88,7 +88,7 @@ const MessageInput = () => {
 
             <button 
             type="button"
-            className={`hidden sm;flex btn btn-circle ${imagePreview ? "text-emerald-500":"text-zinc-400"}`}
+            className={`hidden sm:flex btn btn-circle ${imagePreview ? "text-emerald-500":"text-zinc-400"}`}
                         onClick={()=> fileInputRef.current?.click()}
             >
             <Image size={20}/>
