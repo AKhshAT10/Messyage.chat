@@ -105,7 +105,11 @@ const seedDatabase = async () => {
   try {
     await connectDB();
     await User.deleteMany(); 
-    await User.insertMany(seedUsers);
+    for (const user of seedUsers) {
+    const newUser = new User(user);
+    await newUser.save();  
+  }
+
     console.log("Database seeded successfully");
   } catch (error) {
     console.error("Error seeding database:", error);
@@ -113,7 +117,5 @@ const seedDatabase = async () => {
     mongoose.connection.close(); 
   }
 };
-
-seedDatabase();
 
 seedDatabase();
